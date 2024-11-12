@@ -8,9 +8,10 @@
     tools:showIn="@layout/activity_esp_main">
 
     <RelativeLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btn_provision_device">
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:id="@+id/iv_esp"
@@ -19,17 +20,14 @@
             android:layout_centerInParent="true"
             android:src="@drawable/ic_esp"/>
 
-    </RelativeLayout>
+        <ListView
+            android:id="@+id/saved_device_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/btn_provision_device"
-        layout="@layout/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ll_version"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginTop="@dimen/margin_8"
-        android:layout_marginEnd="@dimen/margin_32" />
+        </ListView>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_version"
@@ -62,5 +60,16 @@
             android:textSize="12sp" />
 
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addDeviceButton"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_alignEnd="@id/mainLayout"
+        android:layout_alignBottom="@id/mainLayout"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginBottom="@dimen/margin_16"
+        android:clickable="true"
+        android:contentDescription="@string/btn_provision_device" />
 
 </RelativeLayout>

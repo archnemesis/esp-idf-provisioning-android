@@ -1,8 +1,8 @@
 <resources>
 
-    <string name="app_name">ESP Provisioning</string>
-    <string name="app_name_ble">ESP BLE Prov</string>
-    <string name="app_name_softap">ESP SoftAP Prov</string>
+    <string name="app_name">Glowsign</string>
+    <string name="app_name_ble">Glowsign BLE</string>
+    <string name="app_name_softap">Glowsign SoftAP Prov</string>
 
     <!-- Screen Titles -->
     <string name="title_activity_connect_device">Connect to Device</string>

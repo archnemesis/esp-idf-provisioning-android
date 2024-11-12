@@ -27,9 +27,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.room.Room;
 
 import com.espressif.AppConstants;
 import com.espressif.provisioning.DeviceConnectionEvent;
+import com.espressif.ui.database.GlowsignDatabase;
+import com.espressif.ui.database.GlowsignDevice;
 import com.espressif.wifi_provisioning.R;
 import com.espressif.provisioning.ESPConstants;
 import com.espressif.provisioning.ESPProvisionManager;
@@ -276,6 +279,20 @@ public class ProvisionActivity extends AppCompatActivity {
                             tick3.setVisibility(View.VISIBLE);
                             progress3.setVisibility(View.GONE);
                             hideLoading();
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    GlowsignDatabase db = GlowsignDatabase
+                                            .getInstance(ProvisionActivity.this);
+
+                                    GlowsignDevice newDevice = new GlowsignDevice();
+                                    newDevice.name = provisionManager.getEspDevice().getDeviceName();
+                                    // todo: fill in model name
+
+                                    db.glowsignDeviceDao().insert(newDevice);
+                                }
+                            }).start();
                         }
                     });
                 }
