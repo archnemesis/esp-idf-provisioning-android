@@ -20,12 +20,13 @@
             android:layout_centerInParent="true"
             android:src="@drawable/ic_esp"/>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/saved_device_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:listitem="@layout/glowsign_device_item">
 
-        </ListView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
 

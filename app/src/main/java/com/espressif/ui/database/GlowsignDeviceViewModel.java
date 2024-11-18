@@ -30,7 +30,7 @@ public class GlowsignDeviceViewModel extends AndroidViewModel {
     }
 
     // below method is to get all the courses in our list.
-    public LiveData<List<GlowsignDevice>> getAllCourses() {
+    public LiveData<List<GlowsignDevice>> getAllDevices() {
         return allDevices;
     }
 }

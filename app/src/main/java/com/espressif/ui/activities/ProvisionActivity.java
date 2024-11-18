@@ -27,12 +27,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import com.espressif.AppConstants;
 import com.espressif.provisioning.DeviceConnectionEvent;
 import com.espressif.ui.database.GlowsignDatabase;
 import com.espressif.ui.database.GlowsignDevice;
+import com.espressif.ui.database.GlowsignDeviceViewModel;
 import com.espressif.wifi_provisioning.R;
 import com.espressif.provisioning.ESPConstants;
 import com.espressif.provisioning.ESPProvisionManager;
@@ -57,12 +59,15 @@ public class ProvisionActivity extends AppCompatActivity {
     private String ssidValue, passphraseValue = "", dataset;
     private ESPProvisionManager provisionManager;
     private boolean isProvisioningCompleted = false;
+    private GlowsignDeviceViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provision);
+
+        viewModel = new ViewModelProvider(this).get(GlowsignDeviceViewModel.class);
 
         Intent intent = getIntent();
         ssidValue = intent.getStringExtra(AppConstants.KEY_WIFI_SSID);
@@ -280,19 +285,9 @@ public class ProvisionActivity extends AppCompatActivity {
                             progress3.setVisibility(View.GONE);
                             hideLoading();
 
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    GlowsignDatabase db = GlowsignDatabase
-                                            .getInstance(ProvisionActivity.this);
-
-                                    GlowsignDevice newDevice = new GlowsignDevice();
-                                    newDevice.name = provisionManager.getEspDevice().getDeviceName();
-                                    // todo: fill in model name
-
-                                    db.glowsignDeviceDao().insert(newDevice);
-                                }
-                            }).start();
+                            GlowsignDevice newDevice = new GlowsignDevice();
+                            newDevice.name = provisionManager.getEspDevice().getDeviceName();
+                            viewModel.insert(newDevice);
                         }
                     });
                 }
@@ -445,6 +440,10 @@ public class ProvisionActivity extends AppCompatActivity {
                             tick3.setVisibility(View.VISIBLE);
                             progress3.setVisibility(View.GONE);
                             hideLoading();
+
+                            GlowsignDevice newDevice = new GlowsignDevice();
+                            newDevice.name = provisionManager.getEspDevice().getDeviceName();
+                            viewModel.insert(newDevice);
                         }
                     });
                 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Spinner
+        android:id="@+id/preset_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/spinner_background"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16"
+        tools:listitem="@android:layout/simple_spinner_item"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/preset_spinner"
+        android:layout_centerHorizontal="true">
+
+        <com.espressif.ui.views.ColorChooser
+            android:id="@+id/color_chooser_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16" />
+        <com.espressif.ui.views.ColorChooser
+            android:id="@+id/color_chooser_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_below="@id/color_chooser_1"/>
+        <com.espressif.ui.views.ColorChooser
+            android:id="@+id/color_chooser_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_below="@id/color_chooser_2"/>
+
+    </RelativeLayout>
+</RelativeLayout>

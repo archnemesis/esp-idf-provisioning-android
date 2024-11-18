@@ -36,10 +36,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.espressif.AppConstants;
@@ -47,6 +54,8 @@ import com.espressif.provisioning.ESPConstants;
 import com.espressif.provisioning.ESPProvisionManager;
 import com.espressif.ui.database.GlowsignDatabase;
 import com.espressif.ui.database.GlowsignDevice;
+import com.espressif.ui.database.GlowsignDeviceAdapter;
+import com.espressif.ui.database.GlowsignDeviceViewModel;
 import com.espressif.wifi_provisioning.BuildConfig;
 import com.espressif.wifi_provisioning.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,7 +75,9 @@ public class EspMainActivity extends AppCompatActivity {
     private ImageView ivEsp;
     private SharedPreferences sharedPreferences;
     private String deviceType;
-    private ListView deviceListView;
+    private RecyclerView deviceListView;
+    private GlowsignDeviceViewModel viewModel;
+    private ActivityResultLauncher<Intent> deviceDiscoverLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +90,39 @@ public class EspMainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(AppConstants.ESP_PREFERENCES, Context.MODE_PRIVATE);
         provisionManager = ESPProvisionManager.getInstance(getApplicationContext());
+
+        deviceListView = findViewById(R.id.saved_device_list);
+        deviceListView.setLayoutManager(new LinearLayoutManager(this));
+        deviceListView.setHasFixedSize(true);
+        final GlowsignDeviceAdapter adapter = new GlowsignDeviceAdapter();
+        deviceListView.setAdapter(adapter);
+
+        viewModel = new ViewModelProvider(this).get(GlowsignDeviceViewModel.class);
+        viewModel.getAllDevices().observe(this, new Observer<List<GlowsignDevice>>() {
+            @Override
+            public void onChanged(List<GlowsignDevice> glowsignDevices) {
+                adapter.submitList(glowsignDevices);
+            }
+        });
+
+        deviceDiscoverLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Log.i(TAG, "Finished with the DeviceDiscoverActivity");
+                    }
+                }
+        );
+
+        adapter.setOnItemClickListener(new GlowsignDeviceAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(GlowsignDevice device) {
+                Intent intent = new Intent(EspMainActivity.this, DeviceDiscoverActivity.class);
+                intent.putExtra(DeviceDiscoverActivity.EXTRA_DEVICE_NAME, device.name);
+                deviceDiscoverLauncher.launch(intent);
+            }
+        });
 
         GlowsignDatabase db = Room.databaseBuilder(getApplicationContext(),
                 GlowsignDatabase.class, "glowsign-data").build();
